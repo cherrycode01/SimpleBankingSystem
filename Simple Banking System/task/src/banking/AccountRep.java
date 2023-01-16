@@ -1,5 +1,6 @@
 package banking;
 
+import java.awt.*;
 import java.sql.*;
 public class AccountRep {
 
@@ -40,7 +41,43 @@ public class AccountRep {
         }
     }
 
-    public static void update (int newBalance, String cardNumber) {
-        String sql = "UPDATE card SET balance = ? WHERE number = ?";
+    public void update (Account a) {
+
+        String sql = "UPDATE card SET " +
+                "pin = ?," +
+                "balance = ?" +
+                "WHERE number = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement (sql);
+            pstmt.setString (1, a.getPin ());
+            pstmt.setDouble (2, a.getBalance ());
+            pstmt.setString (3, a.getCardNumber ());
+
+            pstmt.executeUpdate ();
+
+        } catch (SQLException e) {
+            throw new RuntimeException (e);
+
+        }
     }
+    public void loadAccountsFromDbToList(List accountList){
+        String sql = "SELECT * FROM card";
+
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while(rs.next()){
+                Account a = new Account();
+                a.setCardNumber(rs.getString("number"));
+                a.setPin(rs.getString("pin"));
+                a.setBalance(rs.getInt("balance"));
+                accountList.add(a);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        //System.out.println(accountsList.toString());
+    }
+
 }

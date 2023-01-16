@@ -21,7 +21,7 @@ public class Account {
         return cardNumber;
     }
 
-    public int generateCheckSumDigit (String checkSum) {
+    public static int generateCheckSumDigit (String checkSum) {
         int sum = 0;
         int remainder = (checkSum.length () + 1) % 2;
         for (int i = 0; i < checkSum.length (); i++) {
